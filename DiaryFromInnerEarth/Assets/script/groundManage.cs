@@ -1,7 +1,7 @@
-using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System;
 public class groundManage : MonoBehaviour
 {
     private const int height = 7;
@@ -10,8 +10,35 @@ public class groundManage : MonoBehaviour
     private Dictionary<Vector2Int, GameObject> cuGroundDic;//当前显示的地块
     private Dictionary<Vector2Int, GameObject> unLoadGroundDic;//将要卸载的地块
     [SerializeField] private Transform playerPos;
+    #region 地块种类
     [SerializeField] private GameObject squarePrefab;
+    private GameObject squarePrefab1
+    {
+        get
+        {
+            int index = UnityEngine.Random.Range(1, 7);
+            if (index == 1)
+                return soilSquare;
+            else if (index == 2)
+                return warterSquare;
+            else if (index == 3)
+                return plantSquare;
+            else if (index == 4)
+                return stoneSquare;
+            else if (index == 5)
+                return animalSquare;
+            else
+                return woodSquare;
+        }
+    }
+    [SerializeField] private GameObject soilSquare;
+    [SerializeField] private GameObject warterSquare;
+    [SerializeField] private GameObject plantSquare;
+    [SerializeField] private GameObject animalSquare;
+    [SerializeField] private GameObject stoneSquare;
+    [SerializeField] private GameObject woodSquare;
     [SerializeField] private Transform gourndParent;
+    #endregion
     private void Awake()
     {
         groundDic = new Dictionary<Vector2Int, GameObject>();
@@ -35,7 +62,7 @@ public class groundManage : MonoBehaviour
                     continue;
                 int dx = playerX + i;
                 int dy = playerY + j;
-                loadGround(new Vector2Int(dx, dy));
+                loadGround(new Vector2Int(dx, dy));//加载视野里的地块
             }
         }
         unLoadGroundDic.Clear();
@@ -46,13 +73,11 @@ public class groundManage : MonoBehaviour
             float maxY = playerPos.position.y + height;
             float minY = playerPos.position.y - height;
             if (item.Key.x > maxX || item.Key.x < minX || item.Key.y > maxY || item.Key.y < minY)
-            {
-                unLoadGround(item.Key);
-            }
+                unLoadGround(item.Key);//将移出视野的地块卸载
         }
         unLoadGround(new Vector2Int(playerX, playerY));
         foreach(var item in unLoadGroundDic)
-            cuGroundDic.Remove(item.Key);
+            cuGroundDic.Remove(item.Key);//清空当前地块列表
     }
     private void loadGround(Vector2Int pos)
     {
@@ -61,7 +86,8 @@ public class groundManage : MonoBehaviour
         {
             if (!cuGroundDic.ContainsKey(pos))
                 cuGroundDic.Add(pos, squareToLoad);
-            squareToLoad.SetActive(true);
+            if(squarePrefab!=null)
+                squareToLoad.SetActive(true);
         }
         else
         {
@@ -76,7 +102,8 @@ public class groundManage : MonoBehaviour
         GameObject squareToUnLoad;
         if (groundDic.TryGetValue(pos, out squareToUnLoad))
         {
-            squareToUnLoad.SetActive(false);
+            if(squareToUnLoad!=null)
+                squareToUnLoad.SetActive(false);
             unLoadGroundDic.Add(pos, squareToUnLoad);
         }
     }
