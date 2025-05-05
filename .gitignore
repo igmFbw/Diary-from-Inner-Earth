@@ -72,3 +72,12 @@ crashlytics-build.properties
 # Temporary auto-generated Android Assets
 /[Aa]ssets/[Ss]treamingAssets/aa.meta
 /[Aa]ssets/[Ss]treamingAssets/aa/*
+DiaryFromInnerEarth/ProjectSettings
+DiaryFromInnerEarth/Packages
+DiaryFromInnerEarth/Packages/packages-lock.json
+DiaryFromInnerEarth/ProjectSettings/PackageManagerSettings.asset
+DiaryFromInnerEarth/ProjectSettings/ProjectVersion.txt
+DiaryFromInnerEarth/.idea/.idea.DiaryFromInnerEarth/.idea/vcs.xml
+DiaryFromInnerEarth/.idea/.idea.DiaryFromInnerEarth/.idea/indexLayout.xml
+DiaryFromInnerEarth/.idea/.idea.DiaryFromInnerEarth/.idea/encodings.xml
+/DiaryFromInnerEarth/.idea
