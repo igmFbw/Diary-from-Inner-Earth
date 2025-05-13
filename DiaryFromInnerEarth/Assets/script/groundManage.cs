@@ -123,4 +123,10 @@ public class groundManage : MonoBehaviour
             unLoadGroundDic.Add(pos, squareToUnLoad);
         }
     }
+
+
+    private void Rule()
+    {
+
+    }
 }
