@@ -3,7 +3,18 @@ guid: 19379bf9cd360cd4789ceeed4f94f3e6
 MonoImporter:
   externalObjects: {}
   serializedVersion: 2
-  defaultReferences: []
+  defaultReferences:
+  - playerPos: {instanceID: 0}
+  - squarePrefab: {instanceID: 0}
+  - soilSquare1: {fileID: 8208515311825177479, guid: 120aa291c577de34fb289c570ab1ef93, type: 3}
+  - soilSquare2: {fileID: 8208515311825177479, guid: 04fc45016776aa94690964b21deea33e, type: 3}
+  - soilSquare3: {fileID: 8208515311825177479, guid: b6b196541ce34d341a8ff92040755cd3, type: 3}
+  - waterSquare: {fileID: 4641727248666808734, guid: e86de4f2e813abd4ea3e525626ac5f6d, type: 3}
+  - plantSquare: {fileID: 6591735290783082172, guid: 69cf6016028a4ff41a339c3b571d40cb, type: 3}
+  - animalSquare: {fileID: 4633214900096626975, guid: 4ccd513eaded35647a02574e0346ac91, type: 3}
+  - stoneSquare: {instanceID: 0}
+  - woodSquare: {fileID: 1469871346762785462, guid: 52ac7efaa08f1624099c9f216eac8e36, type: 3}
+  - groundParent: {instanceID: 0}
   executionOrder: 0
   icon: {instanceID: 0}
   userData: 

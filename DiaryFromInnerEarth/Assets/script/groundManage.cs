@@ -16,28 +16,44 @@ public class groundManage : MonoBehaviour
     {
         get
         {
-            int index = UnityEngine.Random.Range(1, 7);
-            if (index == 1)
-                return soilSquare;
-            else if (index == 2)
-                return warterSquare;
-            else if (index == 3)
-                return plantSquare;
-            else if (index == 4)
-                return stoneSquare;
-            else if (index == 5)
+            int index1 = UnityEngine.Random.Range(1, 144);
+            int index2 = UnityEngine.Random.Range(1, 3);
+            if (index1 >= 1 && index1 < 7)
                 return animalSquare;
-            else
+            else if (index1 >= 7 && index1 < 14)
+                return waterSquare;
+            else if (index1 >= 14 && index1 < 21)
+                return plantSquare;
+            else if (index1 >= 21 && index1 < 25)
+                return stoneSquare;
+            else if (index1 >= 25 && index1 < 29)
                 return woodSquare;
+            else
+            {
+                if(index2 == 1)
+                {
+                    return soilSquare1;
+                }
+                else if (index2 == 2) 
+                {
+                    return soilSquare2;
+                }
+                else
+                {
+                    return soilSquare3;
+                }
+            }
         }
     }
-    [SerializeField] private GameObject soilSquare;
-    [SerializeField] private GameObject warterSquare;
+    [SerializeField] private GameObject soilSquare1;
+    [SerializeField] private GameObject soilSquare2;
+    [SerializeField] private GameObject soilSquare3;
+    [SerializeField] private GameObject waterSquare;
     [SerializeField] private GameObject plantSquare;
     [SerializeField] private GameObject animalSquare;
     [SerializeField] private GameObject stoneSquare;
     [SerializeField] private GameObject woodSquare;
-    [SerializeField] private Transform gourndParent;
+    [SerializeField] private Transform groundParent;
     #endregion
     private void Awake()
     {
@@ -94,7 +110,7 @@ public class groundManage : MonoBehaviour
             squareToLoad = Instantiate(squarePrefab, new Vector2(pos.x, pos.y), Quaternion.identity);
             groundDic.Add(pos, squareToLoad);
             cuGroundDic.Add(pos, squareToLoad);
-            squareToLoad.transform.SetParent(gourndParent);
+            squareToLoad.transform.SetParent(groundParent);
         }
     }
     private void unLoadGround(Vector2Int pos)
