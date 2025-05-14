@@ -1,11 +1,15 @@
+using System;
 using System.Collections;
 using UnityEngine;
+using Random = UnityEngine.Random;
 
 namespace Mole_AI.Scripts
 {
     public class RandomMove : MonoBehaviour
     {
-        [Header("移动设置")]
+
+        [Header("移动设置")] 
+        public RbController rbController;
         public float moveSpeed = 2.0f;          // 移动速度
         public float randomMoveRadius = 3f;         // 随机移动半径（用于可视化）
 
@@ -13,21 +17,45 @@ namespace Mole_AI.Scripts
         public float minChangeInterval = 1f;    // 方向改变的最短时间间隔
         public float maxChangeInterval = 3f;    // 方向改变的最长时间间隔
 
-        private float xDirection;               // 当前移动方向（-1 或 1）
+        [Header("处理水平随机移动的时候的越障问题")] public ObstacleDetection obstacleDetection;
+
+
 
         private void Start()
         {
-            // 初始化随机方向
-            xDirection = Random.Range(0, 2) == 0 ? -1 : 1;
-
             // 启动协程，定期改变方向
             StartCoroutine(ChangeDirection());
+            obstacleDetection.OnObstacleDetected += OnObstacleDetected;
+        }
+
+        private void OnObstacleDetected(int value)
+        {
+            switch (value)
+            {
+                case 0:
+                    // 越过障碍物
+                    rbController.Jump();
+                    break;
+                case 1:
+                    rbController.TurnBack();
+                    break;
+            }
+        }
+
+        private void OnEnable()
+        {
+            rbController.moveSpeed = moveSpeed;
+            obstacleDetection.enabled = true;
+        }
+
+        private void OnDisable()
+        {
+            obstacleDetection.enabled = false;
         }
 
         private void FixedUpdate()
         {
-            var direction = new Vector2(xDirection, 0);
-            transform.Translate(direction * (moveSpeed * Time.deltaTime), Space.World);
+            obstacleDetection.facingDirection = rbController.XDirection;
         }
 
         private IEnumerator ChangeDirection()
@@ -38,7 +66,7 @@ namespace Mole_AI.Scripts
                 yield return new WaitForSeconds(Random.Range(minChangeInterval, maxChangeInterval));
 
                 // 随机选择新的方向
-                xDirection = Random.Range(0, 2) == 0 ? -1 : 1;
+                rbController.XDirection = Random.Range(0, 2) == 0 ? -1 : 1;
             }
         }
 

@@ -22,7 +22,8 @@ namespace Mole_AI.Scripts
         
         [Header("心情值更新")]
         public UnityEvent<int, int> moodChangedEvent;
-
+        [Header("动作控制")]
+        public RbController rbController;
         [Header("随机移动状态")] public RandomMove randomMove;
         
         [Header("饥饿状态")]
@@ -65,6 +66,7 @@ namespace Mole_AI.Scripts
             // 在食物需求状态会优先寻找附近的食物
             if (currentDemand == Demand.Food)
             {
+                lookForFood.isHungry = true;
                 if (lookForFood.target == null)
                 {
                     lookForFood.FindTarget();
@@ -73,6 +75,10 @@ namespace Mole_AI.Scripts
                 {
                     lookForFood.MoveTowardsTarget();
                 }
+            }
+            else
+            {
+                lookForFood.isHungry = false;
             }
             // 饥饿状态需要在一定时间内被满足
             if (hungerDurationTimer.IsRunning)
@@ -84,6 +90,7 @@ namespace Mole_AI.Scripts
             {
                 progressBar.SetProgress(1);
                 print("没能够及时吃到东西，心情变坏了");
+                rbController.moveSpeed = 0;
                 currentMood -= Time.deltaTime * moleData.moodChangeSpeed;
             }
             else
