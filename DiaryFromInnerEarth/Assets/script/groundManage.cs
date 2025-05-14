@@ -11,8 +11,8 @@ public class groundManage : MonoBehaviour
     private Dictionary<Vector2Int, GameObject> unLoadGroundDic;//将要卸载的地块
     [SerializeField] private Transform playerPos;
     #region 地块种类
-    [SerializeField] private GameObject squarePrefab;
-    private GameObject squarePrefab1
+    [SerializeField] private GameObject emptySquare;
+    private GameObject squarePrefab
     {
         get
         {
@@ -123,10 +123,11 @@ public class groundManage : MonoBehaviour
             unLoadGroundDic.Add(pos, squareToUnLoad);
         }
     }
-
-
-    private void Rule()
+    public void destroySquare(Vector2Int pos)
     {
-
+        GameObject newSquare = Instantiate(emptySquare, new Vector2(pos.x,pos.y), Quaternion.identity);
+        newSquare.transform.SetParent(groundParent);
+        cuGroundDic[pos] = emptySquare;
+        groundDic[pos] = emptySquare;
     }
 }
