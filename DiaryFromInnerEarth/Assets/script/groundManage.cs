@@ -4,6 +4,23 @@ using UnityEngine;
 using System;
 public class groundManage : MonoBehaviour
 {
+    public static groundManage _instance;
+    public static groundManage instance
+    {
+        get
+        {
+            if (_instance == null)
+            {
+                _instance = FindObjectOfType<groundManage>();
+                if (_instance == null)
+                {
+                    GameObject go = new GameObject("groundManager");
+                    _instance = go.AddComponent<groundManage>();
+                }
+            }
+            return _instance;
+        }
+    }
     private const int height = 7;
     private const int length = 11;
     private Dictionary<Vector2Int, GameObject> groundDic;//地块
@@ -11,7 +28,6 @@ public class groundManage : MonoBehaviour
     private Dictionary<Vector2Int, GameObject> unLoadGroundDic;//将要卸载的地块
     [SerializeField] private Transform playerPos;
     #region 地块种类
-    [SerializeField] private GameObject emptySquare;
     private GameObject squarePrefab
     {
         get
@@ -53,10 +69,20 @@ public class groundManage : MonoBehaviour
     [SerializeField] private GameObject animalSquare;
     [SerializeField] private GameObject stoneSquare;
     [SerializeField] private GameObject woodSquare;
+    [SerializeField] private GameObject emptySquare;
     [SerializeField] private Transform groundParent;
     #endregion
     private void Awake()
     {
+        if (_instance != null && _instance != this)
+        {
+            Destroy(gameObject);
+        }
+        else
+        {
+            _instance = this;
+            DontDestroyOnLoad(gameObject);
+        }
         groundDic = new Dictionary<Vector2Int, GameObject>();
         cuGroundDic = new Dictionary<Vector2Int, GameObject>();
         unLoadGroundDic = new Dictionary<Vector2Int, GameObject>();
@@ -114,7 +140,7 @@ public class groundManage : MonoBehaviour
         }
     }
     private void unLoadGround(Vector2Int pos)
-    {
+    {//动态卸载视野外的地块
         GameObject squareToUnLoad;
         if (groundDic.TryGetValue(pos, out squareToUnLoad))
         {
@@ -123,11 +149,19 @@ public class groundManage : MonoBehaviour
             unLoadGroundDic.Add(pos, squareToUnLoad);
         }
     }
-    public void destroySquare(Vector2Int pos)
+    public void destroySquare(Vector2Int pos) //当地块销毁后生成空地块
     {
         GameObject newSquare = Instantiate(emptySquare, new Vector2(pos.x,pos.y), Quaternion.identity);
         newSquare.transform.SetParent(groundParent);
-        cuGroundDic[pos] = emptySquare;
-        groundDic[pos] = emptySquare;
+        cuGroundDic[pos] = newSquare;
+        groundDic[pos] = newSquare;
+    }
+    public void changeSquare(Vector2Int pos,GameObject squareToChange)
+    {//用于使用卡牌改变地块
+        GameObject newSquare = Instantiate(squareToChange, new Vector2(pos.x, pos.y), Quaternion.identity);
+        newSquare.transform.SetParent(groundParent);
+        Destroy(groundDic[pos].gameObject);
+        cuGroundDic[pos] = newSquare;
+        groundDic[pos] = newSquare;
     }
 }
