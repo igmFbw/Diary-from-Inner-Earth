@@ -5,6 +5,11 @@ namespace Mole_AI.Scripts
 {
     public class LookForFood : MonoBehaviour
     {
+        [Header("碰到物块主动挖掘，等挖掘动画播放完毕之后继续下一步")]
+        public MoleAnimationController moleAnimationController;
+
+        private GameObject brickNeedToBeDig;
+        
         [Header("探测设置")]
         public float searchRadius = 5f;         // 探索半径
         public string targetTag = "Food";      // 目标标签
@@ -16,7 +21,26 @@ namespace Mole_AI.Scripts
         
         public Action GetFoodAction;
         public bool isHungry;
-        
+
+
+        private void Start()
+        {
+            moleAnimationController.digDone.AddListener(DigDoneEvent);
+        }
+
+        private void OnDestroy()
+        {
+            moleAnimationController.digDone.RemoveListener(DigDoneEvent);
+        }
+
+        private void DigDoneEvent()
+        {
+            if (brickNeedToBeDig)
+            {
+                Destroy(brickNeedToBeDig);
+            }
+        }
+
         public void FindTarget()
         {
             Collider2D[] hitColliders = Physics2D.OverlapCircleAll(transform.position, searchRadius);
@@ -35,6 +59,10 @@ namespace Mole_AI.Scripts
 
         public void MoveTowardsTarget()
         {
+            if (rbController.isDigging)
+            {
+                return;
+            }
             rbController.moveSpeed = 0;
             if (target == null) return;
             var direction = (Vector2)(target.position - transform.position).normalized;
@@ -53,7 +81,9 @@ namespace Mole_AI.Scripts
             if (other.gameObject.CompareTag("Square") && isHungry)
             {
                 print("挖掉面前的物块");
-                Destroy(other.gameObject);
+                rbController.isDigging = true;
+                moleAnimationController.PlayDigging();
+                brickNeedToBeDig = other.gameObject;
             }
             if(!other.gameObject.CompareTag("Food")) return;
             Destroy(other.gameObject);
